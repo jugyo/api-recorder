@@ -1,0 +1,27 @@
+{
+  "name": "@jugyo/api-recorder",
+  "version": "1.0.0",
+  "description": "API Recorder",
+  "bin": {
+    "api-recorder": "./dist/index.js"
+  },
+  "scripts": {
+    "dev": "ts-node src/index.ts",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-http-proxy": "^1.6.2"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.4",
+    "typescript": "^4.4.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jugyo/api-recorder.git"
+  }
+}
