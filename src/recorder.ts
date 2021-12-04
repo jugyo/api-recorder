@@ -36,7 +36,7 @@ class CacheStore {
       fs.mkdirSync(_path.dir, { recursive: true });
     }
     debug(`Storing a cache into ${_path.filePath}`);
-    fs.writeFileSync(_path.filePath, data, { flag: "a" });
+    fs.writeFileSync(_path.filePath, data);
   }
 
   makePath(key: Key) {
@@ -89,7 +89,7 @@ export default (options) => {
   const set = (req, data) => {
     const key = genKey(req);
     try {
-    store.set(key, data);
+      store.set(key, data);
     } catch (error: any) {
       console.error(`Failed to cache data for key: ${key}`, error.message);
     }
