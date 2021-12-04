@@ -88,7 +88,11 @@ export default (options) => {
 
   const set = (req, data) => {
     const key = genKey(req);
+    try {
     store.set(key, data);
+    } catch (error: any) {
+      console.error(`Failed to cache data for key: ${key}`, error.message);
+    }
   };
 
   return { get, set };
