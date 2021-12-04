@@ -16,14 +16,22 @@ const app = express();
 
 const { get, set } = recorder({ dir });
 
+const cachingEnabled = !process.env.JUST_PROXY;
+
 app.use(logger);
-app.use(get);
+
+if (cachingEnabled) {
+  app.use(get);
+}
+
 app.use(
   "/",
   proxy(host, {
     userResDecorator: function (proxyRes, proxyResData, userReq, userRes) {
       const data = proxyResData.toString("utf8");
-      set(userReq, data);
+      if (cachingEnabled) {
+        set(userReq, data);
+      }
       return proxyResData;
     },
   })
