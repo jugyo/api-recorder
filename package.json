@@ -1,6 +1,6 @@
 {
   "name": "@jugyo/api-recorder",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "API Recorder",
   "bin": {
     "api-recorder": "./dist/index.js"
