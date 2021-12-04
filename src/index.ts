@@ -16,11 +16,9 @@ const app = express();
 
 const { get, set } = recorder({ dir });
 
-const cachingEnabled = !process.env.JUST_PROXY;
-
 app.use(logger);
 
-if (cachingEnabled) {
+if (!process.env.JUST_PROXY) {
   app.use(get);
 }
 
@@ -29,9 +27,7 @@ app.use(
   proxy(host, {
     userResDecorator: function (proxyRes, proxyResData, userReq, userRes) {
       const data = proxyResData.toString("utf8");
-      if (cachingEnabled) {
-        set(userReq, data);
-      }
+      set(userReq, data);
       return proxyResData;
     },
   })
