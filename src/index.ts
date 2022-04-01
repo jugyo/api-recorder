@@ -27,7 +27,10 @@ app.use(
   proxy(host, {
     userResDecorator: function (proxyRes, proxyResData, userReq, userRes) {
       const data = proxyResData.toString("utf8");
-      set(userReq, data);
+      const cacheInfo = set(userReq, data);
+      if (cacheInfo) {
+        userRes._cacheFilePath = cacheInfo.filePath
+      }
       return proxyResData;
     },
   })

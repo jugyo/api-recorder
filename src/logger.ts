@@ -8,10 +8,13 @@ export default function (req, res, next) {
     } catch (error) {}
 
     console.log(
-      `${authHeader ? authHeader + "... " : ""}${req.method} ${
-        req.originalUrl
-      } ${res.statusCode}${res._cacheHit ? " (CACHE HIT)" : ""}`
+      `${req.method} ${req.originalUrl} ${res.statusCode}${
+        res._cacheHit ? " (CACHE HIT)" : ""
+      }`
     );
+    if (res._cacheFilePath) {
+      console.log(`    FILE: ${res._cacheFilePath}`);
+    }
   });
 
   next();

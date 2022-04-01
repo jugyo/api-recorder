@@ -14,6 +14,11 @@ interface Key {
   fileExtension?: string;
 }
 
+interface CachePath {
+  dir: string;
+  filePath: string;
+}
+
 class CacheStore {
   constructor(private dir: string) {
     if (!fs.existsSync(this.dir)) {
@@ -39,7 +44,7 @@ class CacheStore {
     fs.writeFileSync(_path.filePath, data);
   }
 
-  makePath(key: Key) {
+  makePath(key: Key): CachePath {
     const dir = path.join(
       this.dir,
       encodeURIComponent(key.session),
@@ -78,6 +83,7 @@ export default (options) => {
         }`
       );
       res._cacheHit = true;
+      res._cacheFilePath = store.makePath(key).filePath
       res.status(200);
       res.send(data);
       return;
@@ -90,6 +96,7 @@ export default (options) => {
     const key = genKey(req);
     try {
       store.set(key, data);
+      return store.makePath(key)
     } catch (error: any) {
       console.error(`Failed to cache data for key: ${key}`, error.message);
     }
