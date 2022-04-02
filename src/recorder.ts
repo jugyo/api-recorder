@@ -69,6 +69,24 @@ function genKey(req) {
   return { session, method, url, fileExtension };
 }
 
+function extractMetaData(data: string): {
+  data: string;
+  metadata?: { [key: string]: string };
+} {
+  const match = data.match(/^__.*/g);
+  if (match) {
+    const metadata = {};
+    for (const i of match) {
+      const [key, value] = i.split(/:\s+/);
+      metadata[key.replace(/^__/, "")] = value;
+    }
+    const _data = data.replace(/^__.*\n/g, "");
+    return { data: _data, metadata };
+  } else {
+    return { data };
+  }
+}
+
 export default (options) => {
   const store = new CacheStore(options.dir);
 
@@ -83,9 +101,12 @@ export default (options) => {
         }`
       );
       res._cacheHit = true;
-      res._cacheFilePath = store.makePath(key).filePath
-      res.status(200);
-      res.send(data);
+      res._cacheFilePath = store.makePath(key).filePath;
+
+      const meta = extractMetaData(data);
+
+      res.status(meta.metadata?.status || 200);
+      res.send(meta.data);
       return;
     } else {
       next();
@@ -96,7 +117,7 @@ export default (options) => {
     const key = genKey(req);
     try {
       store.set(key, data);
-      return store.makePath(key)
+      return store.makePath(key);
     } catch (error: any) {
       console.error(`Failed to cache data for key: ${key}`, error.message);
     }
